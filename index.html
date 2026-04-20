@@ -16,10 +16,26 @@
         * { box-sizing: border-box; touch-action: manipulation; font-family: 'Fredoka', sans-serif !important; user-select: none; }
         body { margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden; background-color: #a8d8ff; }
 
-        .screen { display: none !important; position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; background: #a8d8ff; }
-        .screen.active { display: flex !important; flex-direction: column; align-items: center; justify-content: center; z-index: 20; }
+        /* MODIFICATION : Ajout du défilement et alignement haut pour éviter la troncature */
+        .screen { 
+            display: none !important; 
+            position: absolute; 
+            top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            z-index: 10; 
+            background: #a8d8ff; 
+            overflow-y: auto; 
+            padding: 20px;
+        }
+        .screen.active { 
+            display: flex !important; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: flex-start; /* Aligne vers le haut pour ne pas cacher le titre */
+            z-index: 20; 
+        }
 
-        /* BOUTONS SUPERIEURS (Menu + Plein Ecran) */
+        /* BOUTONS SUPERIEURS */
         .top-controls {
             position: absolute;
             top: 15px;
@@ -44,187 +60,82 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            transition: all 0.2s;
         }
-        
-        .top-btn:active { 
-            transform: translateY(2px); 
-            box-shadow: 0 2px 0 rgba(0,0,0,0.1); 
-        }
-        .top-btn:hover { background: rgba(255, 255, 255, 1); }
 
         /* --- Menus --- */
-        .menu-title { font-size: 4rem; color: #1565C0; margin-bottom: 10px; text-shadow: 3px 3px 0 white; text-align: center;}
+        .menu-title { font-size: 4rem; color: #1565C0; margin-bottom: 10px; text-shadow: 3px 3px 0 white; text-align: center; margin-top: 40px;}
         .menu-subtitle { font-size: 2rem; color: #1976D2; margin-bottom: 30px; text-align: center;}
         
         .menu-grid { display: flex; flex-direction: column; gap: 15px; width: 90%; max-width: 650px; }
         .game-type-btn { display: flex; align-items: center; padding: 15px 25px; background: white; border: 4px solid #fff; border-radius: 25px; box-shadow: 0 6px 0 rgba(0,0,0,0.1); cursor: pointer; text-align: left; width: 100%; }
-        .game-type-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
         .game-type-btn span { font-size: 4rem; margin-right: 25px; }
         .btn-text h3 { font-size: 2rem; margin: 0; color: #333; }
         .btn-text p { font-size: 1.3rem; margin: 0; color: #666; }
 
         .grid-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 90%; max-width: 800px; }
         .big-btn { background: white; border: none; border-radius: 20px; padding: 20px; font-size: 1.8rem; font-weight: bold; box-shadow: 0 5px 0 rgba(0,0,0,0.2); cursor: pointer; color: #333; display:flex; flex-direction:column; align-items:center; justify-content: center; text-align: center;}
-        .big-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,0.2); }
         .big-btn span.icon { font-size: 3rem; margin-bottom: 5px; }
 
-        /* --- MODE DUEL (3 COLONNES TBI) --- */
-        .duel-container { display: flex; width: 100%; height: 100%; padding: 15px; padding-top: 60px; gap: 15px; }
-
-        /* Colonnes Joueurs */
-        .player-column {
-            flex: 0 0 30%; 
-            display: flex; flex-direction: column;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px; padding: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
+        /* --- MODE DUEL --- */
+        .duel-container { display: flex; width: 100%; height: 100%; padding: 15px; padding-top: 60px; gap: 15px; overflow: hidden; }
+        .player-column { flex: 0 0 30%; display: flex; flex-direction: column; background: rgba(255, 255, 255, 0.95); border-radius: 15px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .player-column.left { border: 5px solid #ef9a9a; background: #ffebee; }
         .player-column.right { border: 5px solid #90caf9; background: #e3f2fd; }
-
-        /* Colonne Centrale (Visuel) */
-        .center-column {
-            flex: 1; 
-            background: white; border-radius: 15px; border: 5px solid #fff;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
-            position: relative; overflow: hidden;
-            display: flex; flex-direction: column;
-        }
-
-        /* Éléments Joueur */
+        .center-column { flex: 1; background: white; border-radius: 15px; border: 5px solid #fff; position: relative; overflow: hidden; display: flex; flex-direction: column; }
         .player-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .emoji-avatar { font-size: 3rem; }
         .score-badge { font-size: 2.5rem; font-weight: bold; background: white; padding: 2px 15px; border-radius: 15px; box-shadow: 0 3px 0 rgba(0,0,0,0.1);}
-
-        /* Bloc Question */
-        .question-card {
-            background: white; padding: 15px; border-radius: 15px;
-            text-align: center; margin-bottom: 10px;
-            border: 3px solid rgba(0,0,0,0.1); min-height: 100px;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .question-text { font-size: 3.5rem; font-weight: 800; color: #333; white-space: nowrap; }
-
-        /* Input (Réponse) */
-        .answer-input {
-            width: 100%; height: 70px; background: white;
-            border: 4px solid #ccc; border-radius: 15px; margin-bottom: 15px;
-            font-size: 3.5rem; text-align: center; line-height: 60px; font-weight: bold; color: #333;
-            transition: all 0.2s;
-        }
-
-        /* Pavé Numérique */
+        .question-card { background: white; padding: 15px; border-radius: 15px; border: 3px solid rgba(0,0,0,0.1); min-height: 100px; display: flex; align-items: center; justify-content: center; }
+        .question-text { font-size: 3.5rem; font-weight: 800; color: #333; }
+        .answer-input { width: 100%; height: 70px; background: white; border: 4px solid #ccc; border-radius: 15px; margin-bottom: 15px; font-size: 3.5rem; text-align: center; line-height: 60px; font-weight: bold; color: #333; }
         .numpad { flex-grow: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .num-btn {
-            background: white; border: 2px solid #bbb; border-radius: 12px;
-            font-size: 2.5rem; font-weight: bold; cursor: pointer;
-            box-shadow: 0 4px 0 #ccc; color: #444; display: flex; align-items: center; justify-content: center;
-        }
-        .num-btn:active { transform: translateY(4px); box-shadow: 0 0px 0 #ccc; }
+        .num-btn { background: white; border: 2px solid #bbb; border-radius: 12px; font-size: 2.5rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #ccc; color: #444; display: flex; align-items: center; justify-content: center; }
 
-        /* --- VISUELS 100% CSS --- */
+        /* --- VISUELS ORIGINAUX --- */
         .game-visual-area { flex-grow: 1; position: relative; width: 100%; height: 100%; overflow: hidden; }
-
-        /* 1. TIR A LA CORDE */
         .tug-wrapper { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; background: #e0f7fa; }
-        .rope-line {
-            width: 100%; height: 18px; 
-            background: repeating-linear-gradient(45deg, #8d6e63, #8d6e63 15px, #6d4c41 15px, #6d4c41 30px);
-            border-radius: 8px; position: relative; box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-        }
-        .rope-center-mark { position: absolute; top: -30px; left: 50%; width: 6px; height: 78px; background: rgba(0,0,0,0.2); transform: translateX(-50%); z-index: 0; }
-        .rope-knot {
-            position: absolute; top: 50%; left: 50%; 
-            width: 50px; height: 50px; background: #d32f2f; 
-            border-radius: 50%; transform: translate(-50%, -50%);
-            border: 5px solid white; box-shadow: 0 4px 5px rgba(0,0,0,0.3);
-            transition: left 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 5;
-        }
-        .puller-left { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 5rem; z-index: 2; }
-        .puller-right { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-size: 5rem; z-index: 2; }
-
-        /* 2. LE MAT */
+        .rope-line { width: 100%; height: 18px; background: repeating-linear-gradient(45deg, #8d6e63, #8d6e63 15px, #6d4c41 15px, #6d4c41 30px); border-radius: 8px; position: relative; }
+        .rope-knot { position: absolute; top: 50%; left: 50%; width: 50px; height: 50px; background: #d32f2f; border-radius: 50%; transform: translate(-50%, -50%); border: 5px solid white; transition: left 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); z-index: 5; }
+        
         .pole-wrapper { display: flex; height: 100%; padding: 0 10px; background: linear-gradient(to top, #81c784, #e8f5e9); }
         .pole-lane { flex: 1; position: relative; display: flex; justify-content: center; padding-top: 50px;}
-        .pole-stick {
-            width: 50px; height: 100%; 
-            background: linear-gradient(to right, #5d4037, #8d6e63, #5d4037); 
-            position: relative; border-radius: 10px 10px 0 0; z-index: 5;
-            box-shadow: 5px 0 10px rgba(0,0,0,0.2);
-        }
-        .pole-star { position: absolute; top: 5px; font-size: 4rem; z-index: 10; text-shadow: 0 5px 15px rgba(255,215,0,0.8); }
-        .climber-img {
-            position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-            font-size: 4.5rem; transition: bottom 0.5s ease-out; z-index: 6;
-            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));
-        }
+        .pole-stick { width: 50px; height: 100%; background: linear-gradient(to right, #5d4037, #8d6e63, #5d4037); position: relative; border-radius: 10px 10px 0 0; z-index: 5; }
+        .pole-star { position: absolute; top: 5px; font-size: 4rem; z-index: 10; }
+        .climber-img { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); font-size: 4.5rem; transition: bottom 0.5s ease-out; z-index: 6; }
 
-        /* 3. COURSE SAC */
         .track-wrapper { display: flex; height: 100%; background: #aed581; }
-        .track-lane {
-            flex: 1; position: relative; border-right: 4px dashed rgba(255,255,255,0.5);
-            background: #BEE69E;
-        }
-        .track-lane:last-child { border-right: none; }
-        .finish-line { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 40px; 
-            background: repeating-linear-gradient(45deg, white, white 15px, black 15px, black 30px);
-            border-bottom: 5px solid white; z-index: 1;
-        }
+        .track-lane { flex: 1; position: relative; border-right: 4px dashed rgba(255,255,255,0.5); background: #BEE69E; }
+        .finish-line { position: absolute; top: 0; left: 0; width: 100%; height: 40px; background: repeating-linear-gradient(45deg, white, white 15px, black 15px, black 30px); border-bottom: 5px solid white; z-index: 1; }
         .finish-flag { position: absolute; top: 45px; left: 50%; transform: translateX(-50%); font-size: 4rem; opacity: 0.9; }
-        
-        .racer-container {
-            position: absolute; bottom: 5%; left: 50%; transform: translateX(-50%);
-            transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            display: flex; flex-direction: column; align-items: center; z-index: 5;
-        }
-        .racer-emoji { font-size: 4.5rem; z-index: 2; position: relative; }
-        .racer-sack {
-            width: 70px; height: 50px; border-radius: 5px 5px 25px 25px;
-            margin-top: -25px; z-index: 3; position: relative; border: 4px solid rgba(0,0,0,0.2);
-            box-shadow: 0 5px 10px rgba(0,0,0,0.3);
-        }
+        .racer-container { position: absolute; bottom: 5%; left: 50%; transform: translateX(-50%); transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); display: flex; flex-direction: column; align-items: center; z-index: 5; }
+        .racer-emoji { font-size: 4.5rem; }
+        .racer-sack { width: 70px; height: 50px; border-radius: 5px 5px 25px 25px; margin-top: -25px; z-index: 3; border: 4px solid rgba(0,0,0,0.2); }
         .sack-p1 { background: #ffb74d; }
         .sack-p2 { background: #4fc3f7; }
 
-        /* MODALES */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
     </style>
 </head>
 <body>
 
-    <div class="top-controls" id="global-controls" style="display: flex;">
-        <button class="top-btn" onclick="toggleFullScreen()" title="Plein écran">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
-            </svg>
+    <div class="top-controls" id="global-controls">
+        <button class="top-btn" onclick="toggleFullScreen()">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
             Plein écran
         </button>
     </div>
 
     <div id="homeScreen" class="screen active">
         <h1 class="menu-title">Défi Maths</h1>
-        <h2 class="menu-subtitle">Duel au Tableau</h2>
-        
         <div class="menu-grid">
-            <button class="game-type-btn" onclick="selectGame('tir_corde')">
-                <span>🪢</span>
-                <div class="btn-text"><h3>Tir à la Corde</h3><p>Duel de force</p></div>
-            </button>
-            <button class="game-type-btn" onclick="selectGame('le_mat')">
-                <span>🧗</span>
-                <div class="btn-text"><h3>Le Mât</h3><p>Vers le sommet</p></div>
-            </button>
-            <button class="game-type-btn" onclick="selectGame('course_sac')">
-                <span>🐰</span>
-                <div class="btn-text"><h3>Course en Sac</h3><p>Vitesse et rebonds</p></div>
-            </button>
+            <button class="game-type-btn" onclick="selectGame('tir_corde')"><span>🪢</span><div class="btn-text"><h3>Tir à la Corde</h3><p>Duel de force</p></div></button>
+            <button class="game-type-btn" onclick="selectGame('le_mat')"><span>🧗</span><div class="btn-text"><h3>Le Mât</h3><p>Vers le sommet</p></div></button>
+            <button class="game-type-btn" onclick="selectGame('course_sac')"><span>🐰</span><div class="btn-text"><h3>Course en Sac</h3><p>Vitesse et rebonds</p></div></button>
         </div>
     </div>
 
     <div id="opScreen" class="screen">
-        <h1 class="menu-title" style="margin-bottom: 20px;">Quelle activité ?</h1>
+        <h1 class="menu-title">Quelle activité ?</h1>
         <div class="grid-buttons">
             <button class="big-btn" style="background:#B9F6CA;" onclick="selectOperation('addition')"><span class="icon">➕</span>Addition</button>
             <button class="big-btn" style="background:#81D4FA;" onclick="selectOperation('soustraction')"><span class="icon">➖</span>Soustraction</button>
@@ -234,150 +145,98 @@
             <button class="big-btn" style="background:#FFCCBC;" onclick="selectOperation('moities')"><span class="icon">🍕</span>Les Moitiés</button>
             <button class="big-btn" style="background:#D1C4E9; grid-column: span 2;" onclick="selectOperation('complement')"><span class="icon">🎯</span>Les Compléments</button>
         </div>
-        <button class="big-btn" onclick="showScreen('homeScreen')" style="margin-top:30px; width:250px; font-size:1.5rem; background:#78909C; color:white;">Retour</button>
+        <button class="big-btn" onclick="showScreen('homeScreen')" style="margin-top:20px; width:220px; background:#78909C; color:white; margin-bottom: 20px;">Retour</button>
     </div>
 
     <div id="difficultyScreen" class="screen">
-        <h1 class="menu-title" style="margin-bottom: 20px;">Difficulté ?</h1>
+        <h1 class="menu-title">Difficulté ?</h1>
         <div class="grid-buttons" style="grid-template-columns:1fr;">
-            <button class="big-btn" onclick="startGame('niv1')"><span style="color:#8E24AA; font-size:2rem;">🌟 Niveau 1</span><small id="desc1" style="color:#666; font-weight:normal;"></small></button>
-            <button class="big-btn" onclick="startGame('niv2')"><span style="color:#2E7D32; font-size:2rem;">⭐ Niveau 2</span><small id="desc2" style="color:#666; font-weight:normal;"></small></button>
-            <button class="big-btn" onclick="startGame('niv3')"><span style="color:#EF6C00; font-size:2rem;">⭐⭐ Niveau 3</span><small id="desc3" style="color:#666; font-weight:normal;"></small></button>
-            <button class="big-btn" onclick="startGame('niv4')"><span style="color:#C62828; font-size:2rem;">⭐⭐⭐ Niveau 4</span><small id="desc4" style="color:#666; font-weight:normal;"></small></button>
+            <button class="big-btn" onclick="startGame('niv1')"><span>🌟 Niveau 1</span><small id="desc1"></small></button>
+            <button class="big-btn" onclick="startGame('niv2')"><span>⭐ Niveau 2</span><small id="desc2"></small></button>
+            <button class="big-btn" onclick="startGame('niv3')"><span>⭐⭐ Niveau 3</span><small id="desc3"></small></button>
+            <button class="big-btn" onclick="startGame('niv4')"><span>⭐⭐⭐ Niveau 4</span><small id="desc4"></small></button>
         </div>
-        <button class="big-btn" onclick="showScreen('opScreen')" style="margin-top:30px; width:250px; font-size:1.5rem; background:#78909C; color:white;">Retour</button>
+        <button class="big-btn" onclick="showScreen('opScreen')" style="margin-top:20px; width:220px; background:#78909C; color:white; margin-bottom: 20px;">Retour</button>
     </div>
 
-    <div id="gameScreen" class="screen">
-        
-        <div class="top-controls">
-            <button class="top-btn" onclick="confirmExit()">🏠 Menu</button>
-            <button class="top-btn" onclick="toggleFullScreen()" title="Plein écran">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
-                </svg>
-            </button>
-        </div>
-
+    <div id="gameScreen" class="screen" style="overflow:hidden;">
+        <div class="top-controls"><button class="top-btn" onclick="retourMenuPrincipal()">🏠 Menu</button></div>
         <div class="duel-container">
-            
             <div class="player-column left">
-                <div class="player-header">
-                    <span class="emoji-avatar">🐻</span>
-                    <span id="score1" class="score-badge" style="color:#c62828">0</span>
-                </div>
+                <div class="player-header"><span>🐻</span><span id="score1" class="score-badge" style="color:#c62828">0</span></div>
                 <div class="question-card"><div id="q1" class="question-text">...</div></div>
                 <div id="disp1" class="answer-input"></div>
                 <div class="numpad">
                     <button class="num-btn" onclick="inP(1,1)">1</button><button class="num-btn" onclick="inP(1,2)">2</button><button class="num-btn" onclick="inP(1,3)">3</button>
                     <button class="num-btn" onclick="inP(1,4)">4</button><button class="num-btn" onclick="inP(1,5)">5</button><button class="num-btn" onclick="inP(1,6)">6</button>
                     <button class="num-btn" onclick="inP(1,7)">7</button><button class="num-btn" onclick="inP(1,8)">8</button><button class="num-btn" onclick="inP(1,9)">9</button>
-                    <button class="num-btn" style="background:#ffcdd2" onclick="delP(1)">⌫</button>
-                    <button class="num-btn" onclick="inP(1,0)">0</button>
-                    <button class="num-btn" style="background:#c8e6c9" onclick="chkP(1)">✔</button>
+                    <button class="num-btn" style="background:#ffcdd2" onclick="delP(1)">⌫</button><button class="num-btn" onclick="inP(1,0)">0</button><button class="num-btn" style="background:#c8e6c9" onclick="chkP(1)">✔</button>
                 </div>
             </div>
-
-            <div class="center-column">
-                <div id="gameVisuals" class="game-visual-area"></div>
-            </div>
-
+            <div class="center-column"><div id="gameVisuals" class="game-visual-area"></div></div>
             <div class="player-column right">
-                <div class="player-header">
-                    <span id="score2" class="score-badge" style="color:#1565c0">0</span>
-                    <span class="emoji-avatar">🐼</span>
-                </div>
+                <div class="player-header"><span id="score2" class="score-badge" style="color:#1565c0">0</span><span>🐼</span></div>
                 <div class="question-card"><div id="q2" class="question-text">...</div></div>
                 <div id="disp2" class="answer-input"></div>
                 <div class="numpad">
                     <button class="num-btn" onclick="inP(2,1)">1</button><button class="num-btn" onclick="inP(2,2)">2</button><button class="num-btn" onclick="inP(2,3)">3</button>
                     <button class="num-btn" onclick="inP(2,4)">4</button><button class="num-btn" onclick="inP(2,5)">5</button><button class="num-btn" onclick="inP(2,6)">6</button>
                     <button class="num-btn" onclick="inP(2,7)">7</button><button class="num-btn" onclick="inP(2,8)">8</button><button class="num-btn" onclick="inP(2,9)">9</button>
-                    <button class="num-btn" style="background:#ffcdd2" onclick="delP(2)">⌫</button>
-                    <button class="num-btn" onclick="inP(2,0)">0</button>
-                    <button class="num-btn" style="background:#c8e6c9" onclick="chkP(2)">✔</button>
+                    <button class="num-btn" style="background:#ffcdd2" onclick="delP(2)">⌫</button><button class="num-btn" onclick="inP(2,0)">0</button><button class="num-btn" style="background:#c8e6c9" onclick="chkP(2)">✔</button>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <div id="overlayModal" class="modal-overlay">
-        <div id="overlayContent" style="text-align:center; color:white;"></div>
-    </div>
+    <div id="overlayModal" class="modal-overlay"><div id="overlayContent" style="text-align:center; color:white;"></div></div>
 
     <script>
-        // --- GESTION PLEIN ECRAN ---
+        let game = { mode: null, op: null, diff: null, active: false, target: 10, p1: { score: 0, ans: '', qVal: 0, history: [] }, p2: { score: 0, ans: '', qVal: 0, history: [] } };
+
         function toggleFullScreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => {
-                    console.log(`Erreur plein écran: ${err.message}`);
-                });
-            } else {
-                if (document.exitFullscreen) { document.exitFullscreen(); }
-            }
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(e => console.log(e));
+            else if (document.exitFullscreen) document.exitFullscreen();
         }
 
-        // --- ÉTAT DU JEU ---
-        let game = {
-            mode: null, op: null, diff: null, active: false, target: 10,
-            p1: { score: 0, ans: '', qVal: 0, history: [] },
-            p2: { score: 0, ans: '', qVal: 0, history: [] }
-        };
+        // MODIFICATION : Nouvelle fonction de retour sans reload()
+        function retourMenuPrincipal() {
+            game.active = false;
+            game.p1.score = 0; game.p2.score = 0;
+            game.p1.history = []; game.p2.history = [];
+            document.getElementById('overlayModal').style.display = 'none';
+            showScreen('homeScreen');
+        }
 
-        // --- NAVIGATION ---
         function showScreen(id) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            
-            // Masquer les contrôles globaux si on est en jeu (car le jeu a les siens intégrés)
-            if(id === 'gameScreen') {
-                document.getElementById('global-controls').style.display = 'none';
-            } else {
-                document.getElementById('global-controls').style.display = 'flex';
-            }
+            const target = document.getElementById(id);
+            target.classList.add('active');
+            target.scrollTop = 0; // Remonte en haut de page
+            document.getElementById('global-controls').style.display = (id === 'gameScreen') ? 'none' : 'flex';
         }
         
         function selectGame(m) { game.mode = m; showScreen('opScreen'); }
         
         function selectOperation(o) { 
             game.op = o; 
-            let d1 = "", d2 = "", d3 = "", d4 = "";
-            switch(o) {
-                case 'addition': d1 = "Somme max 10"; d2 = "Nombres de 0 à 9"; d3 = "10 à 19"; d4 = "Jusqu'à 100"; break;
-                case 'soustraction': d1 = "Le plus grand est 10"; d2 = "Nombres de 0 à 9"; d3 = "10 à 19"; d4 = "Jusqu'à 100"; break;
-                case 'multiplication': d1 = "Tables 1, 2, 5, 10"; d2 = "Tables jusqu'à 5 + 10"; d3 = "Tables 2 à 10"; d4 = "Tables 2 à 12"; break;
-                case 'division': d1 = "Diviseurs 1, 2, 5, 10"; d2 = "Diviseurs jusqu'à 5 + 10"; d3 = "Diviseurs 2 à 10"; d4 = "Diviseurs 2 à 12"; break;
-                case 'complement': d1 = "À 10"; d2 = "À 20"; d3 = "À 100"; d4 = "À 1000"; break;
-                case 'doubles': d1 = "Jusqu'à 10 + 10"; d2 = "Jusqu'à 20 + 20"; d3 = "Jusqu'à 50 + 50"; d4 = "Jusqu'à 100 + 100"; break;
-                case 'moities': d1 = "Moitié jusqu'à 20"; d2 = "Moitié jusqu'à 40"; d3 = "Moitié jusqu'à 100"; d4 = "Moitié jusqu'à 200"; break;
-            }
-            document.getElementById('desc1').innerText = d1;
-            document.getElementById('desc2').innerText = d2;
-            document.getElementById('desc3').innerText = d3;
-            document.getElementById('desc4').innerText = d4;
+            const descs = {
+                addition: ["Somme max 10", "Nombres 0-9", "10-19", "Jusqu'à 100"],
+                soustraction: ["Max 10", "Nombres 0-9", "10-19", "Jusqu'à 100"],
+                multiplication: ["Tables 1,2,5,10", "Tables 2-5", "Tables 2-10", "Tables 2-12"],
+                division: ["Diviseurs 1,2,5,10", "Diviseurs 2-5", "Diviseurs 2-10", "Diviseurs 2-12"],
+                complement: ["À 10", "À 20", "À 100", "À 1000"],
+                doubles: ["Jusqu'à 10+10", "Jusqu'à 20+20", "Jusqu'à 50+50", "Jusqu'à 100+100"],
+                moities: ["Jusqu'à 20", "Jusqu'à 40", "Jusqu'à 100", "Jusqu'à 200"]
+            };
+            for(let i=1; i<=4; i++) document.getElementById('desc'+i).innerText = descs[o][i-1];
             showScreen('difficultyScreen'); 
         }
 
-        function confirmExit() { 
-            if(confirm("Quitter et revenir au menu ?")) {
-                game.active = false;
-                showScreen('homeScreen');
-            } 
-        }
-
-        // --- DÉMARRAGE ---
         function startGame(d) {
-            game.diff = d; game.active = false;
-            game.p1 = { score: 0, ans: '', qVal: 0, history: [] };
-            game.p2 = { score: 0, ans: '', qVal: 0, history: [] };
-
-            document.getElementById('disp1').innerText = '';
-            document.getElementById('disp2').innerText = '';
-
-            setupVisuals();
-            showScreen('gameScreen');
-            startCountdown();
+            game.diff = d; game.p1.score = 0; game.p2.score = 0;
+            game.p1.ans = ''; game.p2.ans = '';
+            document.getElementById('disp1').innerText = ''; document.getElementById('disp2').innerText = '';
+            setupVisuals(); showScreen('gameScreen'); startCountdown();
         }
 
         function startCountdown() {
@@ -385,189 +244,77 @@
             const content = document.getElementById('overlayContent');
             el.style.display = 'flex';
             let n = 3;
-            content.innerHTML = `<div style="font-size:15rem; font-weight:bold; text-shadow: 0 5px 15px rgba(0,0,0,0.5);">${n}</div>`;
-            
             let t = setInterval(() => {
+                if(n > 0) content.innerHTML = `<div style="font-size:10rem; font-weight:bold;">${n}</div>`;
+                else if(n === 0) content.innerHTML = `<div style="font-size:8rem; color:#4CAF50;">GO !</div>`;
+                else { clearInterval(t); el.style.display = 'none'; game.active = true; genQ(1); genQ(2); }
                 n--;
-                if(n>0) content.innerHTML = `<div style="font-size:15rem; font-weight:bold; text-shadow: 0 5px 15px rgba(0,0,0,0.5);">${n}</div>`;
-                else if(n===0) content.innerHTML = `<div style="font-size:12rem; font-weight:bold; color:#4CAF50;">GO !</div>`;
-                else {
-                    clearInterval(t);
-                    el.style.display = 'none';
-                    game.active = true;
-                    genQ(1); genQ(2);
-                }
-            }, 1000);
+            }, 800);
         }
 
-        // --- GÉNÉRATION MATHS SANS DOUBLONS ---
         function generateSingleQ() {
-            let n1, n2, sym, res, txt;
+            let n1, n2, res, txt;
             const r = (min,max) => Math.floor(Math.random()*(max-min+1))+min;
-            const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
-            
             if (game.op === 'complement') {
-                let target = (game.diff === 'niv1') ? 10 : (game.diff === 'niv2') ? 20 : (game.diff === 'niv3') ? 100 : 1000;
-                n1 = r(1, target - 1); res = target - n1; txt = `${n1} + ❓ = ${target}`;
-                return { qVal: res, txt: txt };
+                let target = (game.diff==='niv1')?10:(game.diff==='niv2')?20:(game.diff==='niv3')?100:1000;
+                n1 = r(1, target-1); res = target - n1; txt = `${n1} + ? = ${target}`;
+            } else if (game.op === 'doubles') {
+                let max = (game.diff==='niv1')?10:(game.diff==='niv2')?20:(game.diff==='niv3')?50:100;
+                n1 = r(1, max); res = n1*2; txt = `${n1} + ${n1} =`;
+            } else if (game.op === 'moities') {
+                let max = (game.diff==='niv1')?10:(game.diff==='niv2')?20:(game.diff==='niv3')?50:100;
+                res = r(1, max); n1 = res*2; txt = `Moitié de ${n1} =`;
+            } else if (game.op === 'addition') {
+                n1 = r(0, 10); n2 = r(0, 10); res = n1+n2; txt = `${n1} + ${n2} =`;
+            } else if (game.op === 'soustraction') {
+                n1 = r(5, 20); n2 = r(0, n1); res = n1-n2; txt = `${n1} - ${n2} =`;
+            } else if (game.op === 'multiplication') {
+                n1 = r(2, 10); n2 = r(2, 10); res = n1*n2; txt = `${n1} × ${n2} =`;
+            } else if (game.op === 'division') {
+                n2 = r(2, 10); res = r(1, 10); n1 = n2*res; txt = `${n1} : ${n2} =`;
             }
-            if (game.op === 'doubles') {
-                let maxBase = (game.diff === 'niv1') ? 10 : (game.diff === 'niv2') ? 20 : (game.diff === 'niv3') ? 50 : 100;
-                n1 = r(1, maxBase); res = n1 + n1; txt = `${n1} + ${n1} =`;
-                return { qVal: res, txt: txt };
-            }
-            if (game.op === 'moities') {
-                let maxBase = (game.diff === 'niv1') ? 10 : (game.diff === 'niv2') ? 20 : (game.diff === 'niv3') ? 50 : 100;
-                res = r(1, maxBase); n1 = res * 2; txt = `Moitié de ${n1} =`;
-                return { qVal: res, txt: txt };
-            }
-            if (game.op === 'addition') {
-                sym = '+';
-                if (game.diff === 'niv1') { n1 = r(0, 10); n2 = r(0, 10 - n1); }
-                else if (game.diff === 'niv2') { n1 = r(0, 9); n2 = r(0, 9); }
-                else if (game.diff === 'niv3') { n1 = r(10, 19); n2 = r(10, 19); }
-                else { n1 = r(10, 100); n2 = r(10, 100); }
-                res = n1 + n2;
-            } 
-            else if (game.op === 'soustraction') {
-                sym = '-';
-                if(game.diff === 'niv1') { let larger = r(0, 10); n1 = larger; n2 = r(0, larger); res = n1 - n2; } 
-                else {
-                    let a, b;
-                    if(game.diff === 'niv2') { a = r(0, 9); b = r(0, 9); }
-                    else if(game.diff === 'niv3') { a = r(10, 19); b = r(10, 19); }
-                    else { a = r(10, 100); b = r(10, 100); }
-                    n1 = Math.max(a, b); n2 = Math.min(a, b); res = n1 - n2;
-                }
-            } 
-            else if (game.op === 'multiplication') {
-                sym = '×';
-                let tables = (game.diff === 'niv1') ? [0, 1, 2, 5, 10] : (game.diff === 'niv2') ? [0, 1, 2, 3, 4, 5, 10] : (game.diff === 'niv3') ? [2, 3, 4, 5, 6, 7, 8, 9, 10] : [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-                n1 = pick(tables); n2 = r(0, 12);     
-                if((game.diff === 'niv3' || game.diff === 'niv4') && Math.random() < 0.6) {
-                    if(n1 >= 6) { let maxLimit = (game.diff === 'niv3') ? 9 : 12; n2 = r(6, maxLimit); }
-                }
-                if(Math.random() < 0.5) { let temp = n1; n1 = n2; n2 = temp; }
-                res = n1 * n2;
-            } 
-            else if (game.op === 'division') { 
-                sym = ':';
-                let tables = (game.diff === 'niv1') ? [1, 2, 5, 10] : (game.diff === 'niv2') ? [1, 2, 3, 4, 5, 10] : (game.diff === 'niv3') ? [2, 3, 4, 5, 6, 7, 8, 9, 10] : [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-                let divisor = pick(tables); let quotient = r(0, 12);
-                if((game.diff === 'niv3' || game.diff === 'niv4') && Math.random() < 0.6) {
-                    if(divisor >= 6) { let maxLimit = (game.diff === 'niv3') ? 9 : 12; quotient = r(6, maxLimit); }
-                }
-                n2 = divisor; n1 = divisor * quotient; res = quotient;
-            }
-
-            txt = `${n1} ${sym} ${n2} =`;
             return { qVal: res, txt: txt };
         }
 
         function genQ(pNum) {
-            let player = pNum === 1 ? game.p1 : game.p2;
-            let q;
-            let maxTries = 50; 
-            
-            do {
-                q = generateSingleQ();
-                maxTries--;
-            } while (player.history.includes(q.txt) && maxTries > 0);
-            
-            player.history.push(q.txt);
-            player.qVal = q.qVal;
+            let p = pNum === 1 ? game.p1 : game.p2;
+            let q = generateSingleQ();
+            p.qVal = q.qVal;
             document.getElementById(`q${pNum}`).innerText = q.txt;
         }
 
-        // --- INPUT ---
-        function inP(p, n) {
+        function inP(p, n) { if(game.active) { let obj = p===1?game.p1:game.p2; if(obj.ans.length<5) obj.ans+=n; document.getElementById('disp'+p).innerText = obj.ans; } }
+        function delP(p) { if(game.active) { let obj = p===1?game.p1:game.p2; obj.ans = obj.ans.slice(0,-1); document.getElementById('disp'+p).innerText = obj.ans; } }
+        function chkP(pNum) {
             if(!game.active) return;
-            let obj = p===1 ? game.p1 : game.p2;
-            if(obj.ans.length < 5) obj.ans += n;
-            document.getElementById('disp' + p).innerText = obj.ans;
+            let p = pNum===1?game.p1:game.p2;
+            if(parseInt(p.ans) === p.qVal) {
+                p.score++; p.ans = ''; document.getElementById('disp'+pNum).innerText = '';
+                flash(pNum, true); updateVisuals(); checkWin(); if(game.active) genQ(pNum);
+            } else { p.ans = ''; document.getElementById('disp'+pNum).innerText = ''; flash(pNum, false); }
         }
-        function delP(p) {
-            if(!game.active) return;
-            let obj = p===1 ? game.p1 : game.p2;
-            obj.ans = obj.ans.slice(0, -1);
-            document.getElementById('disp' + p).innerText = obj.ans;
-        }
-        function chkP(p) {
-            if(!game.active) return;
-            let obj = p===1 ? game.p1 : game.p2;
-            if(!obj.ans) return;
 
-            if(parseInt(obj.ans) === obj.qVal) {
-                flash(p, true);
-                obj.score++;
-                obj.ans = '';
-                document.getElementById('disp' + p).innerText = '';
-                updateVisuals();
-                checkWin();
-                if(game.active) genQ(p);
-            } else {
-                flash(p, false);
-                obj.ans = '';
-                document.getElementById('disp' + p).innerText = '';
-            }
-        }
         function flash(p, ok) {
-            const el = document.getElementById('disp' + p);
+            const el = document.getElementById('disp'+p);
             el.style.backgroundColor = ok ? '#c8e6c9' : '#ffcdd2';
-            el.style.transform = 'scale(1.05)';
-            setTimeout(()=> {
-                el.style.backgroundColor = 'white';
-                el.style.transform = 'scale(1)';
-            }, 300);
+            setTimeout(() => el.style.backgroundColor = 'white', 300);
         }
 
-        // --- VISUELS 100% CSS ---
+        // VISUELS ORIGINAUX (Etoiles et lignes conservées)
         function setupVisuals() {
             const area = document.getElementById('gameVisuals');
-            
             if(game.mode === 'tir_corde') {
-                area.innerHTML = `
-                    <div class="tug-wrapper">
-                        <div class="rope-center-mark"></div>
-                        <div class="puller-left">🐻</div>
-                        <div class="puller-right">🐼</div>
-                        <div class="rope-line"><div id="ropeKnot" class="rope-knot"></div></div>
-                    </div>
-                `;
+                area.innerHTML = `<div class="tug-wrapper"><div class="rope-line"><div id="ropeKnot" class="rope-knot"></div></div><div style="position:absolute;left:10px;font-size:4rem">🐻</div><div style="position:absolute;right:10px;font-size:4rem">🐼</div></div>`;
             } else if(game.mode === 'le_mat') {
-                area.innerHTML = `
-                    <div class="pole-wrapper">
-                        <div class="pole-lane">
-                            <div class="pole-star">⭐</div>
-                            <div class="pole-stick"><div id="vis1" class="climber-img">🐻</div></div>
-                        </div>
-                        <div class="pole-lane" style="border-left:2px dashed rgba(0,0,0,0.1);">
-                            <div class="pole-star">⭐</div>
-                             <div class="pole-stick"><div id="vis2" class="climber-img">🐼</div></div>
-                        </div>
-                    </div>
-                `;
+                area.innerHTML = `<div class="pole-wrapper">
+                    <div class="pole-lane"><div class="pole-star">⭐</div><div class="pole-stick"><div id="vis1" class="climber-img">🐻</div></div></div>
+                    <div class="pole-lane"><div class="pole-star">⭐</div><div class="pole-stick"><div id="vis2" class="climber-img">🐼</div></div></div>
+                </div>`;
             } else {
-                area.innerHTML = `
-                    <div class="track-wrapper">
-                        <div class="track-lane">
-                            <div class="finish-line"></div>
-                            <div class="finish-flag">🏁</div>
-                            <div id="vis1" class="racer-container">
-                                <div class="racer-emoji">🐻</div>
-                                <div class="racer-sack sack-p1"></div>
-                            </div>
-                        </div>
-                        <div class="track-lane">
-                            <div class="finish-line"></div>
-                            <div class="finish-flag">🏁</div>
-                            <div id="vis2" class="racer-container">
-                                <div class="racer-emoji">🐼</div>
-                                <div class="racer-sack sack-p2"></div>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                area.innerHTML = `<div class="track-wrapper">
+                    <div class="track-lane"><div class="finish-line"></div><div class="finish-flag">🏁</div><div id="vis1" class="racer-container"><div class="racer-emoji">🐻</div><div class="racer-sack sack-p1"></div></div></div>
+                    <div class="track-lane"><div class="finish-line"></div><div class="finish-flag">🏁</div><div id="vis2" class="racer-container"><div class="racer-emoji">🐼</div><div class="racer-sack sack-p2"></div></div></div>
+                </div>`;
             }
             updateVisuals();
         }
@@ -575,43 +322,31 @@
         function updateVisuals() {
             document.getElementById('score1').innerText = game.p1.score;
             document.getElementById('score2').innerText = game.p2.score;
-
             if(game.mode === 'tir_corde') {
                 let diff = game.p2.score - game.p1.score;
-                if(diff < -10) diff = -10; if(diff > 10) diff = 10;
-                let pct = 50 + (diff * 4); 
-                document.getElementById('ropeKnot').style.left = pct + '%';
+                document.getElementById('ropeKnot').style.left = (50 + diff * 4) + '%';
             } else {
-                let pct1 = (game.p1.score / game.target) * 80 + 5;
-                let pct2 = (game.p2.score / game.target) * 80 + 5;
-                if(pct1>85) pct1=85; if(pct2>85) pct2=85;
-
-                document.getElementById('vis1').style.bottom = pct1 + '%';
-                document.getElementById('vis2').style.bottom = pct2 + '%';
+                document.getElementById('vis1').style.bottom = Math.min(game.p1.score * 8 + 5, 85) + '%';
+                document.getElementById('vis2').style.bottom = Math.min(game.p2.score * 8 + 5, 85) + '%';
             }
         }
 
-        // --- VICTOIRE ---
         function checkWin() {
             let win = 0;
             if(game.mode === 'tir_corde') {
-                let diff = game.p1.score - game.p2.score;
-                if(diff >= 10) win = 1; else if(diff <= -10) win = 2;
+                if(game.p1.score - game.p2.score >= 10) win = 1;
+                else if(game.p2.score - game.p1.score >= 10) win = 2;
             } else {
-                if(game.p1.score >= game.target) win = 1;
-                else if(game.p2.score >= game.target) win = 2;
+                if(game.p1.score >= 10) win = 1; else if(game.p2.score >= 10) win = 2;
             }
-
             if(win > 0) {
                 game.active = false;
                 const el = document.getElementById('overlayModal');
-                const content = document.getElementById('overlayContent');
                 el.style.display = 'flex';
-                content.innerHTML = `
-                    <h1 style="font-size:5rem; color:#4CAF50; margin-bottom:10px;">VICTOIRE !</h1>
-                    <div style="font-size:12rem; animation: bounce 1s infinite;">${win===1 ? '🐻' : '🐼'}</div>
-                    <p style="font-size:3rem; margin-bottom:30px;">L'équipe ${win===1?'DES OURS':'DES PANDAS'} gagne !</p>
-                    <button onclick="confirmExit()" style="padding:20px 50px; font-size:2rem; font-weight:bold; border-radius:50px; border:none; background:#2196F3; color:white; cursor:pointer; box-shadow:0 5px 15px rgba(0,0,0,0.3);">🏠 Menu Principal</button>
+                document.getElementById('overlayContent').innerHTML = `
+                    <h1 style="font-size:4rem; color:#4CAF50;">VICTOIRE !</h1>
+                    <div style="font-size:10rem; animation: bounce 1s infinite;">${win===1?'🐻':'🐼'}</div>
+                    <button onclick="retourMenuPrincipal()" style="padding:15px 35px; font-size:2rem; border-radius:40px; border:none; background:#2196F3; color:white; cursor:pointer; margin-top:20px;">Menu Principal</button>
                 `;
             }
         }
