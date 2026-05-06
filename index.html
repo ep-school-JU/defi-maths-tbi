@@ -16,7 +16,6 @@
         * { box-sizing: border-box; touch-action: manipulation; font-family: 'Fredoka', sans-serif !important; user-select: none; }
         body { margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden; background-color: #a8d8ff; }
 
-        /* MODIFICATION : Ajout du défilement et alignement haut pour éviter la troncature */
         .screen { 
             display: none !important; 
             position: absolute; 
@@ -31,11 +30,10 @@
             display: flex !important; 
             flex-direction: column; 
             align-items: center; 
-            justify-content: flex-start; /* Aligne vers le haut pour ne pas cacher le titre */
+            justify-content: flex-start; 
             z-index: 20; 
         }
 
-        /* BOUTONS SUPERIEURS */
         .top-controls {
             position: absolute;
             top: 15px;
@@ -62,7 +60,6 @@
             gap: 8px;
         }
 
-        /* --- Menus --- */
         .menu-title { font-size: 4rem; color: #1565C0; margin-bottom: 10px; text-shadow: 3px 3px 0 white; text-align: center; margin-top: 40px;}
         .menu-subtitle { font-size: 2rem; color: #1976D2; margin-bottom: 30px; text-align: center;}
         
@@ -76,7 +73,6 @@
         .big-btn { background: white; border: none; border-radius: 20px; padding: 20px; font-size: 1.8rem; font-weight: bold; box-shadow: 0 5px 0 rgba(0,0,0,0.2); cursor: pointer; color: #333; display:flex; flex-direction:column; align-items:center; justify-content: center; text-align: center;}
         .big-btn span.icon { font-size: 3rem; margin-bottom: 5px; }
 
-        /* --- MODE DUEL --- */
         .duel-container { display: flex; width: 100%; height: 100%; padding: 15px; padding-top: 60px; gap: 15px; overflow: hidden; }
         .player-column { flex: 0 0 30%; display: flex; flex-direction: column; background: rgba(255, 255, 255, 0.95); border-radius: 15px; padding: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .player-column.left { border: 5px solid #ef9a9a; background: #ffebee; }
@@ -90,7 +86,6 @@
         .numpad { flex-grow: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .num-btn { background: white; border: 2px solid #bbb; border-radius: 12px; font-size: 2.5rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #ccc; color: #444; display: flex; align-items: center; justify-content: center; }
 
-        /* --- VISUELS ORIGINAUX --- */
         .game-visual-area { flex-grow: 1; position: relative; width: 100%; height: 100%; overflow: hidden; }
         .tug-wrapper { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; position: relative; background: #e0f7fa; }
         .rope-line { width: 100%; height: 18px; background: repeating-linear-gradient(45deg, #8d6e63, #8d6e63 15px, #6d4c41 15px, #6d4c41 30px); border-radius: 8px; position: relative; }
@@ -198,7 +193,6 @@
             else if (document.exitFullscreen) document.exitFullscreen();
         }
 
-        // MODIFICATION : Nouvelle fonction de retour sans reload()
         function retourMenuPrincipal() {
             game.active = false;
             game.p1.score = 0; game.p2.score = 0;
@@ -211,7 +205,7 @@
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             const target = document.getElementById(id);
             target.classList.add('active');
-            target.scrollTop = 0; // Remonte en haut de page
+            target.scrollTop = 0; 
             document.getElementById('global-controls').style.display = (id === 'gameScreen') ? 'none' : 'flex';
         }
         
@@ -220,10 +214,10 @@
         function selectOperation(o) { 
             game.op = o; 
             const descs = {
-                addition: ["Somme max 10", "Nombres 0-9", "10-19", "Jusqu'à 100"],
-                soustraction: ["Max 10", "Nombres 0-9", "10-19", "Jusqu'à 100"],
-                multiplication: ["Tables 1,2,5,10", "Tables 2-5", "Tables 2-10", "Tables 2-12"],
-                division: ["Diviseurs 1,2,5,10", "Diviseurs 2-5", "Diviseurs 2-10", "Diviseurs 2-12"],
+                addition: ["Somme max 10", "De 0+0 à 9+9", "Jusqu'à 19+19", "Jusqu'à 100"],
+                soustraction: ["De 0-0 à 10-10", "De 0-0 à 20-20", "De 0-0 à 50-50", "De 0-0 à 100-100"],
+                multiplication: ["Tables 1, 2, 5, 10", "Tables 2 à 5", "Tables 2 à 10", "Tables 2 à 12"],
+                division: ["Diviseurs 1, 2, 5, 10", "Tables 2 à 5", "Tables 2 à 10", "Tables 2 à 12"],
                 complement: ["À 10", "À 20", "À 100", "À 1000"],
                 doubles: ["Jusqu'à 10+10", "Jusqu'à 20+20", "Jusqu'à 50+50", "Jusqu'à 100+100"],
                 moities: ["Jusqu'à 20", "Jusqu'à 40", "Jusqu'à 100", "Jusqu'à 200"]
@@ -255,7 +249,45 @@
         function generateSingleQ() {
             let n1, n2, res, txt;
             const r = (min,max) => Math.floor(Math.random()*(max-min+1))+min;
-            if (game.op === 'complement') {
+            
+            if (game.op === 'addition') {
+                if(game.diff === 'niv1') {
+                    res = r(0, 10); n1 = r(0, res); n2 = res - n1;
+                } else if(game.diff === 'niv2') {
+                    n1 = r(0, 9); n2 = r(0, 9); res = n1 + n2;
+                } else if(game.diff === 'niv3') {
+                    n1 = r(0, 19); n2 = r(0, 19); res = n1 + n2;
+                } else {
+                    res = r(10, 100); n1 = r(0, res); n2 = res - n1;
+                }
+                txt = `${n1} + ${n2} =`;
+            } 
+            else if (game.op === 'soustraction') {
+                let limit = (game.diff==='niv1')?10:(game.diff==='niv2')?20:(game.diff==='niv3')?50:100;
+                n1 = r(0, limit);
+                n2 = r(0, n1); // On s'assure que n2 <= n1 pour rester dans les naturels
+                res = n1 - n2; 
+                txt = `${n1} - ${n2} =`;
+            }
+            else if (game.op === 'multiplication') {
+                let tables;
+                if(game.diff === 'niv1') tables = [1, 2, 5, 10];
+                else if(game.diff === 'niv2') tables = [2, 3, 4, 5];
+                else if(game.diff === 'niv3') tables = [2, 3, 4, 5, 6, 7, 8, 9, 10];
+                else tables = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+                n1 = tables[Math.floor(Math.random()*tables.length)];
+                n2 = r(1, 10); res = n1 * n2; txt = `${n1} × ${n2} =`;
+            }
+            else if (game.op === 'division') {
+                let tables;
+                if(game.diff === 'niv1') tables = [1, 2, 5, 10];
+                else if(game.diff === 'niv2') tables = [2, 3, 4, 5];
+                else if(game.diff === 'niv3') tables = [2, 3, 4, 5, 6, 7, 8, 9, 10];
+                else tables = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+                n2 = tables[Math.floor(Math.random()*tables.length)];
+                res = r(1, 10); n1 = n2 * res; txt = `${n1} : ${n2} =`;
+            }
+            else if (game.op === 'complement') {
                 let target = (game.diff==='niv1')?10:(game.diff==='niv2')?20:(game.diff==='niv3')?100:1000;
                 n1 = r(1, target-1); res = target - n1; txt = `${n1} + ? = ${target}`;
             } else if (game.op === 'doubles') {
@@ -264,14 +296,6 @@
             } else if (game.op === 'moities') {
                 let max = (game.diff==='niv1')?10:(game.diff==='niv2')?20:(game.diff==='niv3')?50:100;
                 res = r(1, max); n1 = res*2; txt = `Moitié de ${n1} =`;
-            } else if (game.op === 'addition') {
-                n1 = r(0, 10); n2 = r(0, 10); res = n1+n2; txt = `${n1} + ${n2} =`;
-            } else if (game.op === 'soustraction') {
-                n1 = r(5, 20); n2 = r(0, n1); res = n1-n2; txt = `${n1} - ${n2} =`;
-            } else if (game.op === 'multiplication') {
-                n1 = r(2, 10); n2 = r(2, 10); res = n1*n2; txt = `${n1} × ${n2} =`;
-            } else if (game.op === 'division') {
-                n2 = r(2, 10); res = r(1, 10); n1 = n2*res; txt = `${n1} : ${n2} =`;
             }
             return { qVal: res, txt: txt };
         }
@@ -300,7 +324,6 @@
             setTimeout(() => el.style.backgroundColor = 'white', 300);
         }
 
-        // VISUELS ORIGINAUX (Etoiles et lignes conservées)
         function setupVisuals() {
             const area = document.getElementById('gameVisuals');
             if(game.mode === 'tir_corde') {
